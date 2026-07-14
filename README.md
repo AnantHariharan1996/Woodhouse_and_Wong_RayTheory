@@ -31,7 +31,7 @@ Note: If you don't want to specify your own phase velocity map, just use the fun
 
 ### Arrival Angles. 
 
-To generate focusing-predicted amplitudes for any phase velocity map, call the function Calculate_Arrival_Angle_WW86_AllinOne_ArbitraryModel
+To generate focusing-predicted arrival angles for any phase velocity map, call the function Calculate_Arrival_Angle_WW86_AllinOne_ArbitraryModel
 This has the following syntax: [AAlist] = Calculate_FocusingAmps_WW86_AllinOne_ArbitraryModel(lon_src,lat_src,lon_stas,lat_stas,lon_c,lat_c,c)
 
 The 7 inputs, which are all 1-D vectors, are as follows: 
