@@ -56,7 +56,7 @@ There are three examples you could run to get familiar with the outputs and thei
 
 Example1_FocusingAmplitudes_LowVelocityAnomaly.m predicts surface-wave amplitudes due to a single gaussian anomaly in an otherwise homogeneous phase velocity map, and visualizes these amplitudes. See below for what it should look like, and note the streak of high amplitudes forming downstream of the low-velocity anomaly. 
 
-![alt text](https://github.com/AnantHariharan1996/Woodhouse_and_Wong_RayTheory/edit/main/Example1.png "Example of amplitude predctions")
+![alt text](https://github.com/AnantHariharan1996/Woodhouse_and_Wong_RayTheory/blob/main/Example1.png "Example of amplitude predctions")
 
 Example2_FocusingAmplitudes_GDM52.m predicts amplitudes using the GDM52 map at 100s instead of a single anomaly. 
 
