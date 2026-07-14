@@ -8,15 +8,15 @@ To generate focusing-predicted amplitudes for any phase velocity map, call the f
 
 This function has the following syntax: [Amplist] = Calculate_FocusingAmps_WW86_AllinOne_ArbitraryModel(lon_src,lat_src,lon_stas,lat_stas,lon_c,lat_c,c)
 
-The 7 inputs are as follows: 
+The 7 inputs, which are all 1-D vectors, are as follows: 
 - lon_src = The longitude of the Earthquake source
-- lat_src: The latitude of the Earthquake source
-- lon_stas: The longitudes of the stations, or coordinates at which you
+- lat_src = The latitude of the Earthquake source
+- lon_stas = The longitudes of the stations, or coordinates at which you
  want to predict the amplitudes
-- lat_stas:The latitudes of the stations, or coordinates at which you want to predict the amplitudes
-- lon_c: Longitudes at which the phase velocity map is defined.
-- lat_c: Latitudes at whcih the phase velocity map is defined.
-- c: Phase velocity map (km/s or m/s; since this is eventually non-dimensionalized, the units don't matter) at each of the coordinates in lon_c and lat_c
+- lat_stas = The latitudes of the stations, or coordinates at which you want to predict the amplitudes
+- lon_c = Longitudes at which the phase velocity map is defined.
+- lat_c = Latitudes at whcih the phase velocity map is defined.
+- c = Phase velocity map (km/s or m/s; since this is eventually non-dimensionalized, the units don't matter) at each of the coordinates in lon_c and lat_c
 
 The output, Amplist, is a vector of focusing-predicted amplitudes corresponding to the station locations in  lon_stas and lat_stas.
 
@@ -34,15 +34,15 @@ Note: If you don't want to specify your own phase velocity map, just use the fun
 To generate focusing-predicted amplitudes for any phase velocity map, call the function Calculate_Arrival_Angle_WW86_AllinOne_ArbitraryModel
 This has the following syntax: [AAlist] = Calculate_FocusingAmps_WW86_AllinOne_ArbitraryModel(lon_src,lat_src,lon_stas,lat_stas,lon_c,lat_c,c)
 
-The 7 inputs are as follows: 
+The 7 inputs, which are all 1-D vectors, are as follows: 
 - lon_src = The longitude of the Earthquake source
-- lat_src: The latitude of the Earthquake source
-- lon_stas: The longitudes of the stations, or coordinates at which you
+- lat_src = The latitude of the Earthquake source
+- lon_stas = The longitudes of the stations, or coordinates at which you
  want to predict the amplitudes
-- lat_stas:The latitudes of the stations, or coordinates at which you want to predict the amplitudes
-- lon_c: Longitudes at which the phase velocity map is defined.
-- lat_c: Latitudes at whcih the phase velocity map is defined.
-- c: Phase velocity map (km/s or m/s; since this is eventually non-dimensionalized, the units don't matter) at the coordinates in lon_c and lat_c
+- lat_stas = The latitudes of the stations, or coordinates at which you want to predict the amplitudes
+- lon_c = Longitudes at which the phase velocity map is defined.
+- lat_c = Latitudes at whcih the phase velocity map is defined.
+- c = Phase velocity map (km/s or m/s; since this is eventually non-dimensionalized, the units don't matter) at the coordinates in lon_c and lat_c
 
 The output, AAlist, is a vector of Arrival angles (that is, deviations from the direction corresponding to the great-circle path) corresponding to the station locations in  lon_stas and lat_stas.
 
