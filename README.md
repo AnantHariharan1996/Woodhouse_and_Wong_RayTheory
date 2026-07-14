@@ -4,29 +4,29 @@ Anant Hariharan, June 2026
 
 ### Amplitudes. 
 
-To generate focusing-predicted amplitudes for any phase velocity map, call the function Calculate_FocusingAmps_WW86_AllinOne_ArbitraryModel.m
-This has the following syntax: [Amplist] = Calculate_FocusingAmps_WW86_AllinOne_ArbitraryModel(lon_src,lat_src,lon_stas,lat_stas,lon_c,lat_c,c)
+To generate focusing-predicted amplitudes for any phase velocity map, call the function Calculate_FocusingAmps_WW86_AllinOne_ArbitraryModel.m.
+
+This function has the following syntax: [Amplist] = Calculate_FocusingAmps_WW86_AllinOne_ArbitraryModel(lon_src,lat_src,lon_stas,lat_stas,lon_c,lat_c,c)
 
 The 7 inputs are as follows: 
--lon_src = The longitude of the Earthquake source
+- lon_src = The longitude of the Earthquake source
 - lat_src: The latitude of the Earthquake source
--lon_stas: The longitudes of the stations, or coordinates at which you
+- lon_stas: The longitudes of the stations, or coordinates at which you
  want to predict the amplitudes
-- lat_stas:The latitudes of the stations, or coordinates at which you
-% want to predict the amplitudes
--lon_c: Longitudes at which the phase velocity map is defined.
--lat_c: Latitudes at whcih the phase velocity map is defined.
--c: Phase velocity map (km/s or m/s; since this is eventually non-dimensionalized, the units don't matter) at each of the coordinates in lon_c and lat_c
+- lat_stas:The latitudes of the stations, or coordinates at which you want to predict the amplitudes
+- lon_c: Longitudes at which the phase velocity map is defined.
+- lat_c: Latitudes at whcih the phase velocity map is defined.
+- c: Phase velocity map (km/s or m/s; since this is eventually non-dimensionalized, the units don't matter) at each of the coordinates in lon_c and lat_c
 
 The output, Amplist, is a vector of focusing-predicted amplitudes corresponding to the station locations in  lon_stas and lat_stas.
 
-The code works, following the workflow described in studies such as Laske and Masters and Larson and Ekstrom, by (for every source-station path), first rotating the coordinate system so that the source-receiver path is along the equator. Then, the second derivative of the phase velocity maps transverse to the source-receiver path is calculated using a central difference approach. This, along with a few other trigonometric terms, is used as the integrand over the integral from source to receiver- exactly as in the equation below:
+The code works by (for every source-station path), first rotating the coordinate system so that the source-receiver path is along the equator. Then, the second derivative of the phase velocity maps transverse to the source-receiver path is calculated using a central difference approach. This, along with a few other trigonometric terms, is used as the integrand over the integral from source to receiver, as described below.
 
-$$ \ln A_{ij}^{F} = \frac{1}{2\sin\Delta} \int_{0}^{\Delta} \left[ \sin(\Delta-\phi)\sin\phi\, \frac{\partial^2}{\partial\theta^2} \left(\frac{\delta c}{c_0}\right) - \cos(\Delta-2\phi) \left(\frac{\delta c}{c_0}\right) \right] \,d\phi $$
+$$ \ln A = \frac{1}{2\sin\Delta} \int_{0}^{\Delta} \left[ \sin(\Delta-\phi)\sin\phi\, \frac{\partial^2}{\partial\theta^2} \left(\frac{\delta c}{c_0}\right) - \cos(\Delta-2\phi) \left(\frac{\delta c}{c_0}\right) \right] \,d\phi $$
 
+The final amplitudes are exponentiated. 
 
-Note: If you don't want to specify your own phase velocity map, just use the function Calculate_FocusingAmps_WW86_AllinOne_PreloadModel.m 
-In this case, instead of specifying the phase velocity map (lon_c,lat_c,c), just specify the period you're interested in and the earth model. 'GDM52' or 'Ma2014'. The code will then attempt to load in the GDM52 (Ekström, 2011) or the Ma et al., 2014 global phase velocity maps, which are provided for some periods in files with the naming convention '*.pix' or 'map_rayleigh*'. 
+Note: If you don't want to specify your own phase velocity map, just use the function Calculate_FocusingAmps_WW86_AllinOne_PreloadModel.m  In this case, instead of specifying the phase velocity map (lon_c,lat_c,c), just specify the period you're interested in and the earth model. 'GDM52' or 'Ma2014'. The code will then attempt to load in the GDM52 (Ekström, 2011) or the Ma et al., 2014 global phase velocity maps, which are provided for some periods in files with the naming convention '*.pix' or 'map_rayleigh*'. 
 
 
 ### Arrival Angles. 
@@ -46,7 +46,10 @@ The 7 inputs are as follows:
 
 The output, AAlist, is a vector of Arrival angles (that is, deviations from the direction corresponding to the great-circle path) corresponding to the station locations in  lon_stas and lat_stas.
 
-The code works as described previously, but we use the first derivative of the phase velocity map instead of the second derivative, and some of the other terms in the integrand are different. The convention for the arrival angles is positive clockwise.  
+The code works as described previously, but we use the first derivative of the phase velocity map instead of the second derivative, and some of the other terms in the integrand are different, as shown below. Note the first instead of the second derivative. The convention for the arrival angles is positive clockwise.  
+
+$$ \textnu(\Delta) = -sin(\Delta)^{-1} \int^\Delta_0 sin \phi \frac{\partial \delta c (\omega,\phi) /c_0}{\partial \theta} d \phi $$
+
 
 Note: If you don't want to specify your own phase velocity map and are happy just using the global phase velocity maps GDM52 or Ma et al., 2014, which are great, just use the function Calculate_Arrival_Angle_WW86_AllinOne_ArbitraryModel.m 
 This works as explained previously for amplitudes. 
