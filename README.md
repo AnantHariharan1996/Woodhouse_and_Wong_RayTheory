@@ -22,7 +22,7 @@ The output, Amplist, is a vector of focusing-predicted amplitudes corresponding 
 
 The code works by (for every source-station path), first rotating the coordinate system so that the source-receiver path is along the equator. Then, the second derivative of the phase velocity maps transverse to the source-receiver path is calculated using a central difference approach. This, along with a few other trigonometric terms, is used as the integrand over the integral from source to receiver, as described below.
 
-$$ \ln A = \frac{1}{2\sin\Delta} \int_{0}^{\Delta} \left[ \sin(\Delta-\phi)\sin\phi\, \frac{\partial^2}{\partial\theta^2} \left(\frac{\delta c}{c_0}\right) - \cos(\Delta-2\phi) \left(\frac{\delta c}{c_0}\right) \right] d\phi $$
+$$ \ln A = \frac{1}{2\sin\Delta} \int_{0}^{\Delta} \left[ \sin(\Delta-\phi)\sin\phi\ \frac{\partial^2}{\partial\theta^2} \left(\frac{\delta c}{c_0}\right) - \cos(\Delta-2\phi) \left(\frac{\delta c}{c_0}\right) \right] d\phi $$
 
 The final amplitudes are exponentiated. 
 
