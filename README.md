@@ -48,7 +48,7 @@ The output, AAlist, is a vector of Arrival angles (that is, deviations from the 
 
 The code works as described previously, but we use the first derivative of the phase velocity map instead of the second derivative, and some of the other terms in the integrand are different, as shown below. Note the first instead of the second derivative. The convention for the arrival angles is positive clockwise.  
 
-$$ \textnu(\Delta) = -sin(\Delta)^{-1} \int^\Delta_0 sin \phi \frac{\partial \delta c (\omega,\phi) /c_0}{\partial \theta} d \phi $$
+$$ \nu = -sin(\Delta)^{-1} \int^\Delta_0 sin \phi \frac{\partial \delta c (\omega,\phi) /c_0}{\partial \theta} d \phi $$
 
 
 Note: If you don't want to specify your own phase velocity map and are happy just using the global phase velocity maps GDM52 or Ma et al., 2014, which are great, just use the function Calculate_Arrival_Angle_WW86_AllinOne_ArbitraryModel.m 
