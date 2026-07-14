@@ -1,4 +1,4 @@
-This is a trivially small compilation of MATLAB functions to calculate 'long-period' teleseismic surface-wave observables using classical ray theory, as described in Woodhouse and Wong, 1986: "Amplitude, phase and path anomalies of mantle waves", GJI. But I thought I'd upload these in case they were of use, since I haven't found nice implementations of these calculations anywhere else.
+**This is a trivially small compilation of MATLAB functions to calculate 'long-period' teleseismic surface-wave observables using classical ray theory, as described in Woodhouse and Wong, 1986: "Amplitude, phase and path anomalies of mantle waves", GJI. But I thought I'd upload these in case they were of use, since I haven't found nice implementations of these calculations anywhere else.**
 
 Anant Hariharan, June 2026
 
@@ -20,7 +20,11 @@ The 7 inputs are as follows:
 
 The output, Amplist, is a vector of focusing-predicted amplitudes corresponding to the station locations in  lon_stas and lat_stas.
 
-The code works, following the workflow described in studies such as Laske and Masters and Larson and Ekstrom, by (for every source-station path), first rotating the coordinate system so that the source-receiver path is along the equator. Then, the second derivative of the phase velocity maps transverse to the source-receiver path is calculated using a central difference approach. This, along with a few other trigonometric terms, is used as the integrand over the integral from source to receiver. 
+The code works, following the workflow described in studies such as Laske and Masters and Larson and Ekstrom, by (for every source-station path), first rotating the coordinate system so that the source-receiver path is along the equator. Then, the second derivative of the phase velocity maps transverse to the source-receiver path is calculated using a central difference approach. This, along with a few other trigonometric terms, is used as the integrand over the integral from source to receiver- exactly as in the equation below:
+
+$$ \ln A_{ij}^{F} =
++ \frac{1}{2\sin\Delta} \int_{0}^{\Delta} \left[ \sin(\Delta-\phi)\sin\phi\, \frac{\partial^2}{\partial\theta^2} \left(\frac{\delta c}{c_0}\right)
+- \cos(\Delta-2\phi) \left(\frac{\delta c}{c_0}\right) \right] \,d\phi $$
 
 
 Note: If you don't want to specify your own phase velocity map, just use the function Calculate_FocusingAmps_WW86_AllinOne_PreloadModel.m 
