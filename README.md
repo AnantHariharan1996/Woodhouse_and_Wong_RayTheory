@@ -59,13 +59,13 @@ This works as explained previously for amplitudes.
 
 There are three examples you could run to get familiar with the outputs and their visualization!
 
-Example1_FocusingAmplitudes_LowVelocityAnomaly.m predicts surface-wave amplitudes due to a single gaussian anomaly in an otherwise homogeneous phase velocity map, and visualizes these amplitudes. See below for what it should look like, and note the streak of high amplitudes forming downstream of the low-velocity anomaly. 
+*Example1_FocusingAmplitudes_LowVelocityAnomaly.m* predicts surface-wave amplitudes due to a single gaussian anomaly in an otherwise homogeneous phase velocity map, and visualizes these amplitudes. See below for what it should look like, and note the streak of high amplitudes forming downstream of the low-velocity anomaly. 
 
 ![alt text](https://github.com/AnantHariharan1996/Woodhouse_and_Wong_RayTheory/blob/main/Example1.png "Example of amplitude predctions")
 
-Example2_FocusingAmplitudes_GDM52.m predicts amplitudes using the GDM52 map at 100s instead of a single anomaly. 
+*Example2_FocusingAmplitudes_GDM52.m* predicts amplitudes using the GDM52 map at 100s instead of a single anomaly. 
 
-Finally, Example3_WW86_ArrivalAngles_DiffModels.m generates arrival angles for a single event recorded at the TA, using both sets of phase velocity maps at 100 s, and compares the outputs. 
+Finally, *Example3_WW86_ArrivalAngles_DiffModels.m* generates arrival angles for a single event recorded at the TA, using both sets of phase velocity maps at 100 s, and compares the outputs. 
 
 
 ### In progress: Implementation of exact ray-tracing using the formalism in Woodhouse & Wong, 1986.
