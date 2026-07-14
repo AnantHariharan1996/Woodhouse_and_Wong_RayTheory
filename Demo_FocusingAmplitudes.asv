@@ -1,0 +1,36 @@
+% Demonstrate the calculation of amplitudes using the 
+% linearized approach from Woodhouse and Wong, 1986;
+% This is sometimes referred to as the 'path integral approximation'. 
+
+clear; clc; close all; 
+STANFO = readtable('STATIONS_TA');
+slat = STANFO.Var3;
+slon = STANFO.Var4;
+slat=slat(1:2:end);
+slon=slon(1:2:end);
+% In this example, we load the station locations and event locations for
+% one earthquake at one period. Then, we feed this information into the
+% arrival angle prediction code and it generates theoretical arrival
+% angles, and then plots them.
+Period=100;
+
+% Let's asume the event with CMT ID 201501100205A
+elat = -5.72000;
+elon =68.34000;
+    
+ % call the function which calculates amplitudes and give it the station and event locations
+[Amplist] = Calculate_FocusingAmps_WW86_AllinOne_DiffModels(elon,elat,slon,slat,Period,'GDM52');
+
+figure(1)
+scatter(slon,slat,50,Amplist,'filled','MarkerEdgeColor','k','LineWidth',2)
+hold on
+scatter(elat,elon,100,'pentagram','filled')
+colormap(flipud(polarmap))
+barbar=colorbar;
+caxis([-20 20])
+xlim([-125 -85])
+ylim([25 50])
+title([currevid ': Predictions at' num2str(Period) 's, assuming GDM52 Maps' ])
+box on;
+set(gca,'fontsize',18,'linewidth',2,'fontweight','bold')
+

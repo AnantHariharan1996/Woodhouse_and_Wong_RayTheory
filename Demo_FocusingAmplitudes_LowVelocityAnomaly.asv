@@ -1,0 +1,76 @@
+% Demonstrate the focusing of amplitudes that results from a low-velocity
+% anomaly. First, generate a synthetic phase velocity map with a
+% low-velocity anomaly. Then use the expressions in Woodhouse and Wong 1986
+% to predict the amplitudes that result from this. 
+
+clear; clc; close all; 
+load coastlines
+
+%%% Very simple way to generate synthetic phase velocity map with
+% a single focusing blobby low velocity anomaly
+LonList = [-179.5:0.5:179.5];
+LatList = [-89.5:0.5:89.5];
+[lon_c,lat_c] = meshgrid(LonList,LatList);
+CapRadius = 3; % degrees; radius of spherical cap of low velocity anomaly
+Centroid_Lon = 30;
+Centroid_Lat = 20;
+dist2pts = distance(Centroid_Lat,Centroid_Lon,lat_c,lon_c);
+% Make it kinda gaussian-like
+gaussnfn = -0.1*exp(-0.5 * (( - dist2pts) / 6).^2);
+idx = find(dist2pts < CapRadius);
+c = 4+4*(gaussnfn);
+lon_c=lon_c(:); lat_c=lat_c(:); c=c(:);
+
+% specify station locations
+Sta_X = [10:3:60];
+Sta_Y = [10:3:50];
+[lon_stas,lat_stas]=meshgrid(Sta_X,Sta_Y);
+lon_stas=lon_stas(:);
+lat_stas=lat_stas(:);
+% Specify event location
+lat_src = -20;
+lon_src =20;
+%%%
+
+
+ % call the function which calculates amplitudes and give it the station and event locations
+[Amplist] = Calculate_FocusingAmps_WW86_AllinOne_ArbitraryModel(lon_src,lat_src,lon_stas,lat_stas,lon_c,lat_c,c);
+
+[lattrck2,lonttrck2] = track2(lat_src,lon_src,mean(lat_stas),mean(lon_stas));
+
+
+
+figure(1)
+subplot(1,2,1)
+scatter(lon_c,lat_c,50,c,'filled')
+hold on
+scatter(lon_stas,lat_stas,10,[1 0 1],'^','filled')
+scatter(lon_src,lat_src,200,[1 1 1],'pentagram','filled')
+hold on
+plot(coastlon,coastlat,'linewidth',2,'color','k')
+barbar=colorbar;
+ylabel(barbar,'Phase Velocity (km/s)')
+title('Synthetic Phase Velocity Map with Low Velocity Anomaly')
+xlim([-30 80])
+xlim([-30 80])
+box on;
+set(gca,'fontsize',18,'linewidth',2,'fontweight','bold')
+
+
+subplot(1,2,2)
+scatter(lon_stas,lat_stas,30,Amplist,'filled','MarkerEdgeColor','k','LineWidth',0.5)
+hold on
+scatter(lon_src,lat_src,100,'pentagram','filled')
+plot(lonttrck2,lattrck2,'linewidth',2,'linestyle','--','color','k')
+colormap(flipud(polarmap))
+barbar=colorbar;
+plot(coastlon,coastlat,'linewidth',2,'color',[0.5 0.5 0.5])
+ylabel(barbar,'Focusing-Predicted Amplitudes')
+xlim([-30 80])
+xlim([-30 80])
+caxis([0.8 1.2])
+colormap(jet)
+title(['Amplitudes due to Focusing from Low-Velocity Anomaly'])
+box on;
+set(gca,'fontsize',18,'linewidth',2,'fontweight','bold')
+set(gcf,'position',[-17 241 1451 579])

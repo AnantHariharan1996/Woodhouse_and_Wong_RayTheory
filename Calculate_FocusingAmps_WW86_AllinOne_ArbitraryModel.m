@@ -1,0 +1,168 @@
+function [Amplist] = Calculate_FocusingAmps_WW86_AllinOne_ArbitraryModel(lon_src,lat_src,lon_stas,lat_stas,lon_c,lat_c,c)
+%%% Full Implementation of woodhose and wong's linearized approach to
+%%% predict amplitudes for any source-receiver path. 
+%%%
+%%% Note: Unlike with the functions which end in 'PreloadModel',
+%%% this version of the function works with -any- phase velocity map.
+%%% But you have to provide the global phase velocity map 
+%%% In the format lon, lat, ph.vel.
+%
+% You need to provide this function with 7 things:
+% lon_src: The longitude of the Earthquake source
+% lat_src: The latitude of the Earthquake source
+% lon_stas: The longitudes of the stations, or coordinates at which you
+% want to predict the amplitudes
+% lat_stas:The latitudes of the stations, or coordinates at which you
+% want to predict the amplitudes
+% lon_c: Longitudes at which the phase velocity map is defined.
+% lat_c: Latitudes at whcih the phase velocity map is defined.
+% c: Phase velocity map (km/s or m/s; since this is eventually non-dimensionalized, the units don't matter). 
+% Anant Hariharan, 2025
+%
+% The output, Amplist, is a vector of focusing-predicted amplitudes
+% corresponding to the station locations in  lon_stas and lat_stas
+
+
+%preallocate output
+Amplist = NaN*ones(size(lon_stas));
+
+lon = lon_c;
+lat = lat_c;
+c_ref = nanmean(c(:));
+
+% discretization along path and perpendicular to path
+N=500;
+integral_spacing = 0.1;
+
+% First, get the perturbations wrt arbitrary and reasonable reference phvel.
+dcc = (c-c_ref)./c_ref;
+
+% Loop over stations and get the Amplitude for every station
+for stanum = 1:length(lon_stas)
+
+disp([ 'Completed: ' num2str(100*stanum/length(lon_stas) ) '% of total stations for this event'  ])
+lon_sta = lon_stas(stanum);
+lat_sta =lat_stas(stanum);
+
+% rottate coordinate system so that great circle from source to eq is along equator
+% first  rotate for the global phase velocity map
+ [lon_rot,lat_rot] = greatcircle_fast(lon,lat,lon_src,lat_src,lon_sta,lat_sta);
+ % then  rotate for the stations
+[staxrot,stayrot] = greatcircle_fast(lon_sta,lat_sta,lon_src,lat_src,lon_sta,lat_sta);
+
+% get points along the path. 
+[~,lon_gc] = track2(0,0,stayrot,staxrot,[],'degrees',N);
+
+% get points just above the path
+upperlats = integral_spacing*ones(size(lon_gc));
+% get points just below the path.  
+% Remember, this is the equator...
+lowerlats =-1*integral_spacing*ones(size(lon_gc));
+
+% As above so below; get the phase velocities at these coordinates.
+% 
+Values_Upper = griddata(lon_rot(:),lat_rot(:),dcc(:),lon_gc,upperlats);
+Values_Lower = griddata(lon_rot(:),lat_rot(:),dcc(:),lon_gc,lowerlats);
+Values_Center = griddata(lon_rot(:),lat_rot(:),dcc(:),lon_gc,zeros(size(lowerlats))    );
+dtheta = deg2rad(integral_spacing);
+
+% Now, actually take the second derivative transverse to the path.
+% The Central difference approximation for second derivative should go
+% something like this:
+% f'' = (f(x_j+1) - 2*f(x) + f(x_j-1)) /(h^2)
+% Would be good to test different approximations for this derivative.
+% At some point, we could try a fourth-order central difference? TBD
+second_deriv_wrt_colat = (Values_Upper-2*Values_Center+Values_Lower)/(dtheta^2);
+% now perform integration
+Delta  = distance(lat_src,lon_src,lat_sta,lon_sta);
+Delta_rad = deg2rad(Delta);
+
+% get to radians
+longc_rad = deg2rad(lon_gc);
+
+%  Thanks, woodhouse
+integrand = ...
+    sin(Delta_rad-longc_rad) ...
+    .* sin(longc_rad) ...
+    .* second_deriv_wrt_colat-cos(Delta_rad-2*longc_rad).*Values_Center;
+
+
+prefactor = 1/(2*sin(Delta_rad));
+
+zeta=prefactor*trapz(longc_rad,integrand);
+
+% Note: This is log amplitude, right? According to WW86 and Colleen's paper. So exponentiate
+Amplist(stanum)  = exp(zeta);
+
+%AAlist(stanum) = AA;
+end
+
+end
+
+
+
+function [lon_rot,lat_rot] = greatcircle_fast(lon,lat,lon_src,lat_src,lon_sta,lat_sta)
+% rotate everything to a great-circle path, along the equator where the
+% source is at origin. Receiver is then along the equator. 
+lon = deg2rad(lon); lat = deg2rad(lat);
+lon_src = deg2rad(lon_src); lat_src = deg2rad(lat_src);
+lon_sta = deg2rad(lon_sta); lat_sta = deg2rad(lat_sta);
+
+% source and receiver unit vectors
+s = [cos(lat_src)*cos(lon_src);
+     cos(lat_src)*sin(lon_src);
+     sin(lat_src)];
+
+r = [cos(lat_sta)*cos(lon_sta);
+     cos(lat_sta)*sin(lon_sta);
+     sin(lat_sta)];
+
+% basis vectors
+ex = s;
+ez = cross(s,r); ez = ez/norm(ez);
+ey = cross(ez,ex);
+
+% convert all points to Cartesian
+x = cos(lat).*cos(lon);
+y = cos(lat).*sin(lon);
+z = sin(lat);
+
+% projections (fast!)
+xp = ex(1)*x + ex(2)*y + ex(3)*z;
+yp = ey(1)*x + ey(2)*y + ey(3)*z;
+zp = ez(1)*x + ez(2)*y + ez(3)*z;
+
+% deal with annoying machine precision issue at the pole, ugh.
+lat_rot = rad2deg(atan2(zp,sqrt(xp.^2+yp.^2)));
+lon_rot = rad2deg(atan2(yp,xp));
+
+end
+
+function [ lon,lat,phvel,phvel_ref ] = Read_GDM52_Phvels( fname )
+% Reads GDM52 Phase velocity files.
+% These files are downloaded from the GDM52 website
+% https://www.ldeo.columbia.edu/~ekstrom/Projects/SWP/GDM52.html
+% These files  must be in the same folder as this function. 
+% Read reference phase velocity
+fid=fopen(fname);
+linenum=3;
+C=textscan(fid,'%s %f',1,'delimiter','\n','headerlines',linenum-1);
+GrpvelString=C{1};
+GrpvelString=GrpvelString{1};
+GrpvelString=GrpvelString(end-7:end);
+fclose(fid);
+referencegrpvel=str2num(GrpvelString);
+% Read information
+fid=fopen(fname);
+data=textscan(fid,'%f %f %f %f','HeaderLines',6);
+fclose(fid);
+
+lat=data{1};
+lon=data{2};
+grpveldeviation=data{4};
+
+phvel=referencegrpvel+referencegrpvel*grpveldeviation/100;
+
+phvel_ref=referencegrpvel;
+end
+
