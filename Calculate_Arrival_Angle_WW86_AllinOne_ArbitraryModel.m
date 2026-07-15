@@ -1,9 +1,6 @@
 function [AAlist] = Calculate_Arrival_Angle_WW86_AllinOne_ArbitraryModel(lon_src,lat_src,lon_stas,lat_stas,lon_c,lat_c,c)
 %%% Full Implementation of woodhose and wong's linearized approach to
 %%% predict arrival angles for any source-receiver path. 
-%%% Right now, this is just set up to work with GDM52 or zhitu's phase velocity maps, 
-%%% so you need to have those  files in your path! 
-%
 % You need to provide this function with 7 things:
 % lon_src: The longitude of the Earthquake source
 % lat_src: The latitude of the Earthquake source
