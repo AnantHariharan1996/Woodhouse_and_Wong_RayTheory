@@ -48,7 +48,7 @@ ylabel(barbar,'Arrival Angle (deg)')
 
 
 subplot(1,2,2)
-scatter(slon,slat,50,AAlist,'filled','MarkerEdgeColor','k','LineWidth',2)
+scatter(slon,slat,50,AAlist2,'filled','MarkerEdgeColor','k','LineWidth',2)
 colormap(flipud(polarmap))
 barbar=colorbar;
 caxis([-20 20])
