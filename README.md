@@ -54,6 +54,23 @@ $$ \nu = -sin(\Delta)^{-1} \int^\Delta_0 sin \phi \frac{\partial \delta c (\omeg
 Note: If you don't want to specify your own phase velocity map and are happy just using the global phase velocity maps GDM52 or Ma et al., 2014, which are great, just use the function Calculate_Arrival_Angle_WW86_AllinOne_ArbitraryModel.m 
 This works as explained previously for amplitudes. 
 
+### Traveltimes. 
+
+To generate focusing-predicted amplitudes for any phase velocity map, call the function Calculate_TravelTime_AllinOne_ArbitraryModel.
+
+This is a very trivial function (included for completeness) that calculates great-circle paths for any source-receiver path, gets the average phase velocity along each path, and then calculates travel time using the distance along each path. 
+
+The 7 inputs, which are all 1-D vectors, are as follows: 
+- lon_src = The longitude of the Earthquake source
+- lat_src = The latitude of the Earthquake source
+- lon_stas = The longitudes of the stations, or coordinates at which you
+ want to predict the amplitudes
+- lat_stas = The latitudes of the stations, or coordinates at which you want to predict the amplitudes
+- lon_c = Longitudes at which the phase velocity map is defined.
+- lat_c = Latitudes at whcih the phase velocity map is defined.
+- c = Phase velocity map (km/s; this time, the units matter, since the output is in seconds!) 
+
+
 
 ## Getting Started
 

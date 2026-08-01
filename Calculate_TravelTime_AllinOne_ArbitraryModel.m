@@ -19,7 +19,7 @@ currlon = lon_stas(ijk);
 currlat = lat_stas(ijk);
 [lattrk,lonttrk] = track2(currlat,currlon,lat_src,lon_src,[],'degrees',400);
 ctrk = griddata(lon_c,lat_c,c,lonttrk,lattrk);
-meanc = mean(ctrk);
+meanc = nanmean(ctrk);
 currdist = deg2km(distlist(ijk));
 predicted_ttimelist(ijk) = currdist./meanc;
 
