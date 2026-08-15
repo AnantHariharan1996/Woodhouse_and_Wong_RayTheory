@@ -71,6 +71,12 @@ The 7 inputs, which are all 1-D vectors, are as follows:
 - c = Phase velocity map (km/s; this time, the units matter, since the output is in seconds!) 
 
 
+## Benchmark Example
+
+To demonstrate that the output of these codes matches published results, the figure below shows arrival angles computed for an event located at a latitude of -22.7600 and a longitude of  170.8600, using the 100 s phase velocity map of Ma et al., 2014, truncated at a spherical harmonic degree of L = 60. ('map_rayleigh_10_LMAX_60.txt'). The left panel shows arrival angles calculated using these codes, and the right panel shows published computations from Frazer et al., 2022. 
+
+![alt text](https://github.com/AnantHariharan1996/Woodhouse_and_Wong_RayTheory/blob/main/Combined_Benchmarks.png "Comparison of predicted arrival angles for an identical event and station configuration as that shown in the supplement of Frazer et al., 2022, SRL.")
+
 
 ## Getting Started
 
