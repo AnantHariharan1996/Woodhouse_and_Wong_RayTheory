@@ -13,9 +13,16 @@ function [AAlist] = Calculate_Arrival_Angle_WW86_AllinOne_ArbitraryModel(lon_src
 % c: Phase velocity map (km/s or m/s; since this is eventually non-dimensionalized, the units don't matter). 
 % Anant Hariharan, 2025
 
+%preallocate output
+AAlist = NaN*ones(size(lon_stas));
+
+
 lon = lon_c;
 lat = lat_c;
-c_ref = nanmean(c(:));
+
+[lat_TEMP, lon_TEMP] = fibonacci_sphere(64800);
+c_TEMP = griddata(lon,lat,c,lon_TEMP,lat_TEMP);
+c_ref = nanmean(c_TEMP(:));
 
 % discretization along path and perpendicular to path
 % 
@@ -110,31 +117,33 @@ lon_rot = rad2deg(atan2(yp,xp));
 
 end
 
-function [ lon,lat,phvel,phvel_ref ] = Read_GDM52_Phvels( fname )
-% Reads GDM52 Phase velocity files.
-% These files are downloaded from the GDM52 website
-% https://www.ldeo.columbia.edu/~ekstrom/Projects/SWP/GDM52.html
-% These files  must be in the same folder as this function. 
-% Read reference phase velocity
-fid=fopen(fname);
-linenum=3;
-C=textscan(fid,'%s %f',1,'delimiter','\n','headerlines',linenum-1);
-GrpvelString=C{1};
-GrpvelString=GrpvelString{1};
-GrpvelString=GrpvelString(end-7:end);
-fclose(fid);
-referencegrpvel=str2num(GrpvelString);
-% Read information
-fid=fopen(fname);
-data=textscan(fid,'%f %f %f %f','HeaderLines',6);
-fclose(fid);
 
-lat=data{1};
-lon=data{2};
-grpveldeviation=data{4};
 
-phvel=referencegrpvel+referencegrpvel*grpveldeviation/100;
 
-phvel_ref=referencegrpvel;
+function [lat, lon] = fibonacci_sphere(samples)
+    % Generate points on a sphere using the Fibonacci method
+    % Output in degrees: latitude (-90 to 90) and longitude (-180 to 180)
+
+    if nargin < 1
+        samples = 1000; % default
+    end
+
+    phi = pi * (sqrt(5) - 1); % golden angle in radians
+
+    lat = zeros(samples, 1);
+    lon = zeros(samples, 1);
+
+    for i = 0:samples-1
+        y = 1 - (i / (samples - 1)) * 2; % y from 1 to -1
+        radius = sqrt(1 - y^2);          % radius at y
+
+        theta = phi * i;
+
+        x = cos(theta) * radius;
+        z = sin(theta) * radius;
+
+        % Convert to latitude/longitude
+        lat(i+1) = asind(y);                   % latitude in degrees
+        lon(i+1) = atan2d(z, x);               % longitude in degrees
+    end
 end
-
