@@ -91,4 +91,3 @@ There are three examples you could run to get familiar with the outputs and thei
 Finally, *Example3_WW86_ArrivalAngles_DiffModels.m* generates arrival angles for a single event recorded at the TA, using both sets of phase velocity maps at 100 s, and compares the outputs. 
 
 
-### In progress: Implementation of exact ray-tracing using the formalism in Woodhouse & Wong, 1986.
