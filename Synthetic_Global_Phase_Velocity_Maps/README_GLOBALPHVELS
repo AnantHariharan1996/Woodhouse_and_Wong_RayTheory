@@ -1,0 +1,17 @@
+README
+
+The files in this folder contain global phase velocity maps. The format is as follows:
+Column 1: Longitude
+Column 2: Latitude
+Column 3: Phase Velocity (km/s);
+
+To use these files to compute PIA predictions, you may consider the following.
+
+For example, for S362ANI at 50 s:
+
+Map = load('LON_LAT_C_S362ANI_Period_50s');
+Longitude = Map(:,1);
+Latitude = Map(:,2);
+PhVel = Map(:,3);
+
+[AAlist] = Calculate_Arrival_Angle_WW86_AllinOne_ArbitraryModel(lon_src,lat_src,lon_stas,lat_stas, Longitude, Latitude, PhVel)
